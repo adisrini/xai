@@ -16,26 +16,33 @@ class Explanation:
 
 class ExplainableModel:
     
-    def fit(self, data):
+    def fit(self, X, y):
         """
         Trains the model with the provided training data.
         """
         raise NotImplementedError()
     
-    def predict(self, observation):
+    def predict(self, X):
         """
         Predicts the output given the trained model and an observation.
         """
         raise NotImplementedError()
     
-    def score(self, data):
+    def score(self, X, y):
         """
         Returns the coefficient of determination of the model.
         """
         raise NotImplementedError()
     
-    def explain(self, observation):
+    def explain(self, X):
         """
         Returns an explanation given the trained model and an observation.
         """
         raise NotImplementedError()
+    
+class Explainer:
+    
+    def explain(self, model, X):
+        """
+        Returns an Explanation given a model and an observation
+        """
