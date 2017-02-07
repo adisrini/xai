@@ -1,6 +1,47 @@
-from model import Explanation
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import linprog
+from x_sgdc import ExplainableSGDClassifier
 
 if __name__ == '__main__':
-    shifts = {"hello": 3, "goodbye": 4, "my": 10, "name": 6, "is": 2, "aditya": 5}
-    explanation = Explanation(shifts)
-    print explanation.top_k(5)
+    X = np.array([[-1, -1], [0, 0], [1, 1], [2, 2]])
+    Y = np.array([-1, -1, 1, 1])
+    model = ExplainableSGDClassifier()
+    model.fit(X, Y)
+    coefs = model.reg.coef_[0]
+    b1 = coefs[0]
+    b2 = coefs[1]
+    b0 = model.reg.intercept_[0]
+    n = X[0].size
+    print model.predict([[0.51, 0.51]])
+    
+    print b0
+    print b1
+    print b2
+    
+    observation = [0, 0]
+    
+    c = [0 for _ in range(n)] + [1 for _ in range(n)]
+        
+    A_ineq = []
+    for i in range(n):
+        row1 = [0 for _ in range(2*n)]; row1[i] = -1; row1[n + i] = -1
+        row2 = [0 for _ in range(2*n)]; row2[i] = 1; row2[n + i] = -1
+        A_ineq.append(row1)
+        A_ineq.append(row2)
+    
+    b_ineq = [f(x) for x in observation for f in (lambda x: -x, lambda x: x)]
+            
+    A_e = [[coefs[i] for i in range(n)] + [0 for i in range(n)]]
+    b_e = [-model.predict([observation])[0] - model.reg.intercept_[0]]
+    
+    bnds = ()
+    for i in range(2*n):
+        bnds = ((None, None),) + bnds
+    
+    res = linprog(c, A_ub = A_ineq, b_ub = b_ineq, A_eq = A_e, b_eq = b_e, bounds = bnds, options={"disp": True})
+    print res
+    
+    print model.predict([observation])
+    print model.predict([[res.x[0], res.x[1]]])
+    

@@ -1,10 +1,10 @@
 from sklearn import linear_model
-from model import Explainer
+from model import Explainer, ExplainableModel
 
-class ExplainableLinearRegression(ExplainableModel):
+class ExplainableSGDClassifier(ExplainableModel):
     
     def __init__(self):
-        self.reg = linear_model.LinearRegression()
+        self.reg = linear_model.SGDClassifier()
         self.explainer = Explainer()
     
     def fit(self, X, y):

@@ -46,3 +46,4 @@ class Explainer:
         """
         Returns an Explanation given a model and an observation
         """
+        raise NotImplementedError()
