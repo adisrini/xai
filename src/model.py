@@ -5,17 +5,31 @@ EPSILON = 0.001
 
 class Explanation:
     
-    def __init__(self, shifts):
+    def __init__(self, observation, shifts, ranges):
         """
         Initializes an explanation with a dictionary from features to their shifts.
         """
         self.shifts = shifts
+        self.ranges = ranges
+        self.observation = observation
         
     def top_k(self, k):
         """
         Returns the top k features ranked by amount shifted.
         """
         return sorted(self.shifts.items(), key = operator.itemgetter(1), reverse = True)[:k]
+    
+    def confidence(self):
+        """
+        Returns a quantity representing the robustness of the model. A higher confidence value
+        indicates a robust observation given the model. A lower confidence value indicates
+        a volatile observation given the model.
+        """
+        total = 0
+        n = len(self.observation[0])
+        for i in range(n):
+            total = total + (self.shifts["feature " + str(i)])/float(self.ranges[i])
+        return total/float(n)
 
 class ExplainableModel:
     
@@ -45,18 +59,24 @@ class ExplainableModel:
     
 class Explainer:
     
-    def explain(self, model, X):
+    def explain(self, model, data, X):
         """
         Returns an Explanation given a model and an observation
         """
         assert len(X) == 1
         assert len(model.coef_) == 1
+        
         n = len(X[0])
         coefs = model.coef_[0]
         intercept = model.intercept_[0]
         assert len(coefs) == n
         label = model.predict(X)[0]
         
+        ranges = []
+        for i in range(n):
+            lst = [f[i] for f in data]
+            ranges.append(max(max(lst), X[0][i]) - min(min(lst), X[0][i]))
+                    
         c = [0 for _ in range(n)] + [1 for _ in range(n)]
             
         A_ineq = []
@@ -83,4 +103,5 @@ class Explainer:
         shifts = {}
         for i in range(n):
             shifts["feature " + str(i)] = abs(X[0][i] - res.x[i])
-        return Explanation(shifts)
+            
+        return Explanation(X, shifts, ranges)

@@ -12,6 +12,7 @@ class ExplainableSGDClassifier(ExplainableModel):
         Trains the model with the provided training data.
         """
         self.reg.fit(X, y)
+        self.data = X
     
     def predict(self, X):
         """
@@ -29,4 +30,4 @@ class ExplainableSGDClassifier(ExplainableModel):
         """
         Returns an explanation given the trained model and an observation.
         """
-        return self.explainer.explain(self.reg, X)
+        return self.explainer.explain(self.reg, self.data, X)
