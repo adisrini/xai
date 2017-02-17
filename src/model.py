@@ -77,18 +77,18 @@ class Explainer:
             lst = [f[i] for f in data]
             ranges.append(max(max(lst), X[0][i]) - min(min(lst), X[0][i]))
                     
-        c = [0 for _ in range(n)] + [1 for _ in range(n)]
+        c = [0 for _ in range(n)] + [1 for i in range(n)]
             
         A_ineq = []
         for i in range(n):
-            row1 = [0 for _ in range(2*n)]; row1[i] = -1; row1[n + i] = -1
-            row2 = [0 for _ in range(2*n)]; row2[i] = 1; row2[n + i] = -1
+            row1 = [0 for _ in range(2*n)]; row1[i] = -1/float(ranges[i]); row1[n + i] = -1
+            row2 = [0 for _ in range(2*n)]; row2[i] = 1/float(ranges[i]); row2[n + i] = -1
             A_ineq.append(row1)
             A_ineq.append(row2)
         
         A_ineq.append([label*coefs[i] for i in range(n)] + [0 for i in range(n)])
         
-        b_ineq = [f(x) for x in X[0] for f in (lambda x: -x, lambda x: x)] + [label * -intercept + label * EPSILON]
+        b_ineq = [f(X[0][i]/float(ranges[i])) for i in range(n) for f in (lambda x: -x, lambda x: x)] + [label * -intercept + label * EPSILON]
         
         bnds = ()
         for i in range(2*n):
