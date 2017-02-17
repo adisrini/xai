@@ -59,24 +59,19 @@ class ExplainableModel:
     
 class Explainer:
     
-    def explain(self, model, data, X):
-        """
-        Returns an Explanation given a model and an observation
-        """
-        assert len(X) == 1
-        assert len(model.coef_) == 1
-        
+    def ranges(self, data, X):
+        featureRanges = []
+        for i in range(len(X[0])):
+            lst = [f[i] for f in data]
+            featureRanges.append(max(max(lst), X[0][i]) - min(min(lst), X[0][i]))
+        return featureRanges
+    
+    def linprog(self, model, X, ranges):
         n = len(X[0])
         coefs = model.coef_[0]
-        intercept = model.intercept_[0]
         assert len(coefs) == n
+        intercept = model.intercept_[0]
         label = model.predict(X)[0]
-        
-        ranges = []
-        for i in range(n):
-            lst = [f[i] for f in data]
-            ranges.append(max(max(lst), X[0][i]) - min(min(lst), X[0][i]))
-                    
         c = [0 for _ in range(n)] + [1 for i in range(n)]
             
         A_ineq = []
@@ -94,14 +89,24 @@ class Explainer:
         for i in range(2*n):
             bnds = ((None, None),) + bnds
         
-        res = linprog(c, A_ub = A_ineq, b_ub = b_ineq, bounds = bnds, options={"disp": True})
-        print res
-        
-        print model.predict(X)
-        print model.predict([[res.x[0], res.x[1]]])
-        
+        return linprog(c, A_ub = A_ineq, b_ub = b_ineq, bounds = bnds, options={"disp": True})
+    
+    def shifts(self, X, result):
         shifts = {}
-        for i in range(n):
-            shifts["feature " + str(i)] = abs(X[0][i] - res.x[i])
-            
-        return Explanation(X, shifts, ranges)
+        for i in range(len(X[0])):
+            shifts["feature " + str(i)] = abs(X[0][i] - result.x[i])
+        return shifts
+    
+    def explain(self, model, data, X):
+        """
+        Returns an Explanation given a model and an observation
+        """
+        assert len(X) == 1
+        assert len(model.coef_) == 1
+        
+        featureRanges = self.ranges(data, X)
+        result = self.linprog(model, X, featureRanges)
+        print result
+        
+        shifts = self.shifts(X, result)
+        return Explanation(X, shifts, featureRanges)
