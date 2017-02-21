@@ -1,11 +1,12 @@
 from sklearn.svm import LinearSVC
-from model import Explainer, ExplainableModel
+from explain import Explainer, ExplainableModel
+from optimize import LPOptimizer
 
 class ExplainableSVC(ExplainableModel):
     
     def __init__(self):
         self.reg = LinearSVC()
-        self.explainer = Explainer()
+        self.explainer = Explainer(LPOptimizer.optimize)
     
     def fit(self, X, y):
         """

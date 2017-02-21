@@ -1,11 +1,12 @@
 from sklearn.linear_model import Perceptron
-from model import Explainer, ExplainableModel
+from explain import Explainer, ExplainableModel
+from optimize import LPOptimizer
 
 class ExplainablePerceptron(ExplainableModel):
     
     def __init__(self):
         self.reg = Perceptron()
-        self.explainer = Explainer()
+        self.explainer = Explainer(LPOptimizer.optimize)
     
     def fit(self, X, y):
         """
