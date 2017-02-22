@@ -1,4 +1,5 @@
 from scipy.optimize import linprog
+from copy import deepcopy
 
 class Optimizer:
     def optimize(self, model, data, X):
@@ -6,15 +7,31 @@ class Optimizer:
     
 class PatternSearchOptimizer:
     
+    class SearchNode:
+        def __init__(self, assignments):
+            self.assignments = assignments
+            
+        def successors(self, explore_idxs, delta):
+            succs = []
+            for i in explore_idxs:
+                pos_delta_assignments = deepcopy(self.assignments)
+                pos_delta_assignments[i] += delta
+                succs.append(SearchNode(pos_delta_assignments))
+                neg_delta_assignments = deepcopy(self.assignments)
+                neg_delta_assignments[i] -= delta
+                succs.append(SearchNode(neg_delta_assignments))
+            return succs
+    
     def __init__(self):
         self.EPSILON = 0.001
         
     def optimize(self, model, data, X):
         assert len(X) == 1
-        assert len(model.coef_) == 1
+        
+        print model
     
 class LPOptimizer:
-    
+        
     def __init__(self):
         self.EPSILON = 0.001
     

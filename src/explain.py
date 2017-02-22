@@ -65,6 +65,4 @@ class Explainer:
         """
         shifts, ranges = self.optimizer.optimize(model, data, X)
         return Explanation(X, shifts, ranges)
-        
-        
     

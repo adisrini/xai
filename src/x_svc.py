@@ -1,12 +1,12 @@
-from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 from explain import Explainer, ExplainableModel
-from optimize import LPOptimizer
+from optimize import PatternSearchOptimizer
 
-class ExplainableLinearSVC(ExplainableModel):
+class ExplainableSVC(ExplainableModel):
     
     def __init__(self):
-        self.reg = LinearSVC()
-        self.explainer = Explainer(LPOptimizer())
+        self.reg = SVC(kernel = 'linear')
+        self.explainer = Explainer(PatternSearchOptimizer())
     
     def fit(self, X, y):
         """

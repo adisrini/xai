@@ -6,7 +6,7 @@ class ExplainablePerceptron(ExplainableModel):
     
     def __init__(self):
         self.reg = Perceptron()
-        self.explainer = Explainer(LPOptimizer.optimize)
+        self.explainer = Explainer(LPOptimizer())
     
     def fit(self, X, y):
         """

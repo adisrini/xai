@@ -1,11 +1,11 @@
-from sklearn import linear_model, preprocessing
+from sklearn.linear_model import SGDClassifier
 from explain import Explainer, ExplainableModel
 from optimize import LPOptimizer
 
 class ExplainableSGDClassifier(ExplainableModel):
     
     def __init__(self):
-        self.reg = linear_model.SGDClassifier()
+        self.reg = SGDClassifier()
         self.explainer = Explainer(LPOptimizer())
     
     def fit(self, X, y):
