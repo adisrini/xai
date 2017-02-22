@@ -40,11 +40,15 @@ class PatternSearchOptimizer:
     def __init__(self):
         self.EPSILON = 0.001
         self.FACTOR = float(50)
+        self.MAX_ITER = 10
         
     def optimize(self, model, data, X):
         assert len(X) == 1
         deltas = [range/self.FACTOR for range in util.ranges(data, X)]
         label = model.predict(X)[0]
+        
+        should_be_different = True
+        iter = 0
                         
         visited = set()
         root = self.SearchNode(X)
@@ -55,12 +59,17 @@ class PatternSearchOptimizer:
             succs = n.successors([0, 1], deltas)
             for succ in succs:
                 c = self.SearchNode(succ)
-                if not(model.predict(c.state)[0] == label):
-                    print "Path found!"
-                    print c.state
-                    print model.predict(c.state)[0]
-                    print label
-                    return {}, []
+                if not((model.predict(c.state)[0] == label) == should_be_different):
+                    print "Satisfied!"
+                    deltas = [d/float(2) for d in deltas]
+                    should_be_different = not should_be_different
+                    iter += 1
+                    if iter > self.MAX_ITER:
+                        print "Path found!"
+                        print c.state
+                        print model.predict(c.state)[0]
+                        print label
+                        return {}, []
                 if c not in visited:
                     q.append(c)
                     visited.add(c)
