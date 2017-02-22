@@ -1,5 +1,8 @@
 from scipy.optimize import linprog
 from copy import deepcopy
+import random
+import util
+import numpy as np
 
 class Optimizer:
     def optimize(self, model, data, X):
@@ -8,39 +11,67 @@ class Optimizer:
 class PatternSearchOptimizer:
     
     class SearchNode:
-        def __init__(self, assignments):
-            self.assignments = assignments
+        def __init__(self, state):
+            self.state = state
             
-        def successors(self, explore_idxs, delta):
+        def successors(self, explore_idxs, deltas):
             succs = []
             for i in explore_idxs:
-                pos_delta_assignments = deepcopy(self.assignments)
-                pos_delta_assignments[i] += delta
-                succs.append(SearchNode(pos_delta_assignments))
-                neg_delta_assignments = deepcopy(self.assignments)
-                neg_delta_assignments[i] -= delta
-                succs.append(SearchNode(neg_delta_assignments))
+                pos_delta_assignments = deepcopy(self.state)
+                pos_delta_assignments[0][i] += deltas[i]
+                succs.append(pos_delta_assignments)
+                neg_delta_assignments = deepcopy(self.state)
+                neg_delta_assignments[0][i] -= deltas[i]
+                succs.append(neg_delta_assignments)
             return succs
+        
+        def __repr__(self):
+            return "{" + str(self.state) + "}"
+        
+        def __hash__(self):
+            return hash(str(self.state))
+    
+        def __eq__(self, other):
+            if isinstance(other, type(self)):
+                return self.state == other.state
+            else:
+                return False
     
     def __init__(self):
         self.EPSILON = 0.001
+        self.FACTOR = float(50)
         
     def optimize(self, model, data, X):
         assert len(X) == 1
+        deltas = [range/self.FACTOR for range in util.ranges(data, X)]
+        label = model.predict(X)[0]
+                        
+        visited = set()
+        root = self.SearchNode(X)
+        visited.add(root)
+        q = [root]
+        while len(q) > 0:
+            n = q.pop(0)
+            succs = n.successors([0, 1], deltas)
+            for succ in succs:
+                c = self.SearchNode(succ)
+                if not(model.predict(c.state)[0] == label):
+                    print "Path found!"
+                    print c.state
+                    print model.predict(c.state)[0]
+                    print label
+                    return {}, []
+                if c not in visited:
+                    q.append(c)
+                    visited.add(c)
+        print "No path found!"
         
-        print model
+        return {}, []
     
 class LPOptimizer:
         
     def __init__(self):
         self.EPSILON = 0.001
-    
-    def ranges(self, data, X):
-        featureRanges = []
-        for i in range(len(X[0])):
-            lst = [f[i] for f in data]
-            featureRanges.append(max(max(lst), X[0][i]) - min(min(lst), X[0][i]))
-        return featureRanges
     
     def shifts(self, X, result):
         shifts = {}
@@ -77,7 +108,7 @@ class LPOptimizer:
         assert len(X) == 1
         assert len(model.coef_) == 1
         
-        featureRanges = self.ranges(data, X)
+        featureRanges = util.ranges(data, X)
         result = self.linprog(model, X, featureRanges)
         print result
         

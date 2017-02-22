@@ -12,10 +12,12 @@ if __name__ == '__main__':
     model = ExplainableSVC()
     model.fit(X, Y)
     obs = [[-1000, -1000]]
-    
+        
     explanation = model.explain(obs)
-    print explanation.top_k(2)
-    print explanation.confidence()
+    
+    print model.predict(obs)
+#     print explanation.top_k(2)
+#     print explanation.confidence()
 
 #     X = np.array([["January", 40.0], ["February", 50.0], ["August", 70.0]])
 #     Y = np.array([1, 1, -1])
