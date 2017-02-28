@@ -2,7 +2,7 @@ from sklearn.preprocessing import LabelEncoder
 
 class DataEncoder:
     
-    def encode(self, X):
+    def fit(self, X):
         self.n = len(X[0])
         self.encoders = [LabelEncoder() for i in range(self.n)]
         for i in range(self.n):
@@ -21,13 +21,27 @@ class DataEncoder:
                     encX[row].append(item)
         return encX
         
-    def encode_transform(self, X):
-        self.encode(X)
+    def fit_transform(self, X):
+        self.fit(X)
         return self.transform(X)
+    
+    def inverse_transform(self, encX):
+        X = [[] for i in range(len(encX))]
+        for row in range(len(encX)):
+            for i in range(self.n):
+                item = encX[row][i]
+                try:
+                    X[row].append(self.encoders[i].inverse_transform([item])[0])
+                except:
+                    X[row].append(item)
+        return X
         
     
 if __name__ == '__main__':
     X = [['January', 40], ['February', 80], ['March', 60], ['March', 50]]
     Y = [1, -1, -1, 1]
     de = DataEncoder()
-    encX = de.encode_transform(X)
+    encX = de.fit_transform(X)
+    print encX
+    X_retrieved = de.inverse_transform(encX)
+    print X_retrieved
