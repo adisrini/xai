@@ -8,10 +8,7 @@ def load_credit():
         for ln in reader:
             features = []
             for i in range(len(ln)):
-                if ln[i] == '?':
-                    features.append(None)
-                    continue
-                if i in [1, 2, 7, 10, 13]:
+                if i in [1, 2, 7, 10, 13, 14]:
                     features.append(float(ln[i]))
                 elif i in [15]:
                     y.append(1 if ln[i] == '+' else -1)

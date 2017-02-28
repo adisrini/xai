@@ -12,10 +12,11 @@ if __name__ == '__main__':
 #     Y = [-1, -1, 1, 1]
     model = ExplainableSGDClassifier()
     model.fit(X, Y)
-#     obs = [[-1000, -1000]]
-    obs = [['b', 30.83, 0.0, 'u', 'g', 'w', 'v', 1.25, 't', 't', 1.0, 'f', 'g', 202.0, '0']]
+    obs = [['b', 20.67, 5.29,'u','g','q','v', 0.375, 't', 't', 01,'f', 'g', 00160, 0]]
 #     
-    explanation = model.explain(obs)
+    print model.predict(obs)
+    print model.score(X, Y)
+#     explanation = model.explain(obs)
 #      
 #     print model.predict(obs)
 #     print explanation.top_k(2)
