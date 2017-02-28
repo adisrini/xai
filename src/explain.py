@@ -28,12 +28,13 @@ class Explanation:
             total = total + (self.shifts["feature " + str(i)])/float(self.ranges[i])
         return total/float(n)
 
-class ExplainableModel:
+class ExplainableModel(object):
     
     def fit(self, X, y):
         """
         Trains the model with the provided training data.
         """
+        # preprocess
         pass
         
     def predict(self, X):

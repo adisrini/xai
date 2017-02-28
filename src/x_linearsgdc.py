@@ -12,6 +12,7 @@ class ExplainableSGDClassifier(ExplainableModel):
         """
         Trains the model with the provided training data.
         """
+        super(ExplainableSGDClassifier, self).fit(X, y)
         self.reg.fit(X, y)
         self.data = X
     

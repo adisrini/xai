@@ -1,5 +1,6 @@
 from scipy.optimize import linprog
 from copy import deepcopy
+from Queue import PriorityQueue
 import random
 import util
 import numpy as np
@@ -11,22 +12,23 @@ class Optimizer:
 class PatternSearchOptimizer:
     
     class SearchNode:
-        def __init__(self, state):
+        def __init__(self, state, cost):
             self.state = state
+            self.cost = cost
             
         def successors(self, explore_idxs, deltas):
             succs = []
             for i in explore_idxs:
                 pos_delta_assignments = deepcopy(self.state)
                 pos_delta_assignments[0][i] += deltas[i]
-                succs.append(pos_delta_assignments)
+                succs.append(self.__class__(pos_delta_assignments, deltas[i]))
                 neg_delta_assignments = deepcopy(self.state)
                 neg_delta_assignments[0][i] -= deltas[i]
-                succs.append(neg_delta_assignments)
+                succs.append(self.__class__(neg_delta_assignments, deltas[i]))
             return succs
         
         def __repr__(self):
-            return "{" + str(self.state) + "}"
+            return str(self.state)
         
         def __hash__(self):
             return hash(str(self.state))
@@ -51,28 +53,27 @@ class PatternSearchOptimizer:
         iter = 0
                         
         visited = set()
-        root = self.SearchNode(X)
+        root = self.SearchNode(X, 0)
         visited.add(root)
         q = [root]
         while len(q) > 0:
             n = q.pop(0)
             succs = n.successors([0, 1], deltas)
             for succ in succs:
-                c = self.SearchNode(succ)
-                if not((model.predict(c.state)[0] == label) == should_be_different):
-                    print "Satisfied!"
+                if not((model.predict(succ.state)[0] == label) == should_be_different):
+                    print "Flip"
                     deltas = [d/float(2) for d in deltas]
                     should_be_different = not should_be_different
                     iter += 1
                     if iter > self.MAX_ITER:
                         print "Path found!"
-                        print c.state
-                        print model.predict(c.state)[0]
+                        print succ.state
+                        print model.predict(succ.state)[0]
                         print label
                         return {}, []
-                if c not in visited:
-                    q.append(c)
-                    visited.add(c)
+                if succ not in visited:
+                    q.append(succ)
+                    visited.add(succ)
         print "No path found!"
         
         return {}, []
