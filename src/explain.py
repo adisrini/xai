@@ -9,6 +9,7 @@ class Explanation:
         self.shifts = shifts
         self.ranges = ranges
         self.observation = observation
+        self.EPSILON = 1e-5
         
     def top_k(self, k):
         """
@@ -23,10 +24,13 @@ class Explanation:
         a volatile observation given the model.
         """
         total = 0
+        count = 0
         n = len(self.observation[0])
         for i in range(n):
-            total = total + (self.shifts["feature " + str(i)])/float(self.ranges[i])
-        return total/float(n)
+            if self.shifts["feature " + str(i)] > self.EPSILON:
+                total = total + (self.shifts["feature " + str(i)])/float(self.ranges[i])
+                count += 1
+        return total/float(count)
 
 class ExplainableModel(object):
     
@@ -34,7 +38,6 @@ class ExplainableModel(object):
         """
         Trains the model with the provided training data.
         """
-        # preprocess
         pass
         
     def predict(self, X):
