@@ -112,7 +112,7 @@ class LPOptimizer:
         for i in range(2*n):
             bnds = ((None, None),) + bnds
         
-        return linprog(c, A_ub = A_ineq, b_ub = b_ineq, bounds = bnds, options={"disp": True})
+        return linprog(c, A_ub = A_ineq, b_ub = b_ineq, bounds = bnds, options={"disp": True, "bland": True, "tol": 1e-8})
     
     def optimize(self, model, data, X):
         assert len(X) == 1

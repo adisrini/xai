@@ -1,11 +1,12 @@
 from sklearn.svm import LinearSVC
 from explain import Explainer, ExplainableModel
 from optimize import LPOptimizer
+from process import DataEncoder
 
 class ExplainableLinearSVC(ExplainableModel):
     
     def __init__(self):
-        self.reg = SGDClassifier()
+        self.reg = LinearSVC()
         self.explainer = Explainer(LPOptimizer())
         self.de = DataEncoder()
     

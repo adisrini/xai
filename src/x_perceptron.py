@@ -1,11 +1,12 @@
 from sklearn.linear_model import Perceptron
 from explain import Explainer, ExplainableModel
 from optimize import LPOptimizer
+from process import DataEncoder
 
 class ExplainablePerceptron(ExplainableModel):
     
     def __init__(self):
-        self.reg = SGDClassifier()
+        self.reg = Perceptron()
         self.explainer = Explainer(LPOptimizer())
         self.de = DataEncoder()
     

@@ -10,13 +10,15 @@ if __name__ == '__main__':
     X, Y = datasets.load_credit()
 #     X = [[-2, -200], [0, 0], [1, 100], [2, 200]]
 #     Y = [-1, -1, 1, 1]
-    model = ExplainableSGDClassifier()
+    model = ExplainableLinearSVC()
     model.fit(X, Y)
     obs = [['b', 20.67, 5.29,'u','g','q','v', 0.375, 't', 't', 01,'f', 'g', 00160, 0]]
 #     
     print model.predict(obs)
     print model.score(X, Y)
-#     explanation = model.explain(obs)
+    explanation = model.explain(obs)
+    print explanation.top_k(5)
+    print explanation.confidence()
 #      
 #     print model.predict(obs)
 #     print explanation.top_k(2)
