@@ -58,7 +58,7 @@ class DataEncoder:
         return encX
         
     def inverse_transform(self, encX):
-        
+        return encX
         
     def from_dummies(data):
         '''

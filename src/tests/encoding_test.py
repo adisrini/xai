@@ -1,6 +1,5 @@
 import unittest
-import sys
-from ..process import DataEncoder
+from preprocess.process import DataEncoder
 
 class EncodingTest(unittest.TestCase):
     
@@ -16,5 +15,7 @@ class EncodingTest(unittest.TestCase):
     def testEncodeAndDecode(self):
         self.assertTrue(self.X == self.de.inverse_transform(self.de.fit_transform(self.X)))
         
-if __name__ == '__main__':
-    unittest.main()
+def suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(EncodingTest, 'test'))
+    return suite
