@@ -1,6 +1,6 @@
 from sklearn.svm import SVC
-from explain import Explainer, ExplainableModel
-from optimize import PatternSearchOptimizer
+from explain.explain import Explainer, ExplainableModel
+from optimize.optimize import PatternSearchOptimizer
 
 class ExplainableSVC(ExplainableModel):
     
