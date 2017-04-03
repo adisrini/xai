@@ -17,8 +17,8 @@ class EncodingTest(unittest.TestCase):
         self.assertTrue(self.X == self.de.inverse_transform(self.encX))
     
     def testTransform(self):
-        encObs = self.de.transform(['January', 40, 'Jake'])
-        self.assertTrue(self.encX[0] == encObs)
+        encObs = self.de.transform([['January', 40, 'Jake']])
+        self.assertTrue(self.encX[0] == encObs[0])
         
 def suite():
     suite = unittest.TestSuite()

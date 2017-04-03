@@ -21,18 +21,21 @@ class DataEncoder:
             encX.append(obs)
         return encX
     
-    def transform(self, obs):
-        encObs = []
-        for v in range(self.num_features):
-            if type(obs[v]) == str:
-                for cname in self.dummies[v].columns:
-                    if(obs[v] == cname):
-                        encObs.append(1)
-                    else:
-                        encObs.append(0)
-            else:
-                encObs.append(obs[v])                
-        return encObs
+    def transform(self, X):
+        encX = []
+        for i in range(len(X)):
+            encObs = []
+            for v in range(self.num_features):
+                if type(X[i][v]) == str:
+                    for cname in self.dummies[v].columns:
+                        if(X[i][v] == cname):
+                            encObs.append(1)
+                        else:
+                            encObs.append(0)
+                else:
+                    encObs.append(X[i][v])     
+            encX.append(encObs)           
+        return encX
         
     def inverse_transform(self, encX):
         X = []
