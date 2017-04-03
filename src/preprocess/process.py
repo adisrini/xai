@@ -39,7 +39,7 @@ class DataEncoder:
         
     def inverse_transform(self, encX):
         X = []
-        for i in range(self.n):
+        for i in range(len(encX)):
             obs = []
             actual_index = 0
             for j in range(self.num_features):

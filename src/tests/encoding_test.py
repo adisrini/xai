@@ -12,13 +12,17 @@ class EncodingTest(unittest.TestCase):
     def tearDown(self):
         print("Tearing down...")
         del self.X
-    
+     
     def testEncodeAndDecode(self):
         self.assertTrue(self.X == self.de.inverse_transform(self.encX))
-    
+      
     def testTransform(self):
         encObs = self.de.transform([['January', 40, 'Jake']])
         self.assertTrue(self.encX[0] == encObs[0])
+         
+    def testRounding(self):
+        encObs = [[0.21, 0.69, 0, 40, 0, 0.88, 0.02, 0.1]]
+        self.assertTrue(self.de.inverse_transform(encObs) == [['January', 40, 'Jake']])
         
 def suite():
     suite = unittest.TestSuite()
