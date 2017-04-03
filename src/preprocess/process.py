@@ -20,6 +20,19 @@ class DataEncoder:
                     obs.append(X[i][v])                
             encX.append(obs)
         return encX
+    
+    def transform(self, obs):
+        encObs = []
+        for v in range(self.num_features):
+            if type(obs[v]) == str:
+                for cname in self.dummies[v].columns:
+                    if(obs[v] == cname):
+                        encObs.append(1)
+                    else:
+                        encObs.append(0)
+            else:
+                encObs.append(obs[v])                
+        return encObs
         
     def inverse_transform(self, encX):
         X = []

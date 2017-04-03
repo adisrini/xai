@@ -1,7 +1,7 @@
 from sklearn.linear_model import SGDClassifier
-from explain import Explainer, ExplainableModel
-from optimize import LPOptimizer
-from process import DataEncoder
+from explain.explain import Explainer, ExplainableModel
+from optimize.optimize import LPOptimizer
+from preprocess.process import DataEncoder
 
 class ExplainableSGDClassifier(ExplainableModel):
     
