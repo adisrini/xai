@@ -58,7 +58,7 @@ class DataEncoder:
         return encX
         
     def inverse_transform(self, encX):
-        encX
+        
         
     def from_dummies(data):
         '''
@@ -83,14 +83,3 @@ class DataEncoder:
         columns and regular columns, you must specify ``prefixes``.
         '''
         return data
-        
-    
-if __name__ == '__main__':
-    X = [['January', 40, 'Jake'], ['February', 80, 'Ferida'], ['March', 60, 'Mary'], ['March', 50, 'Michael']]
-    Y = [1, -1, -1, 1]
-    de = DataEncoder()
-    encX = de.fit_transform(X)
-    print "-----------------"
-    print encX
-#     X_retrieved = de.inverse_transform(encX)
-#     print X_retrieved
