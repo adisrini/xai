@@ -111,6 +111,13 @@ class LPOptimizer:
         bnds = ()
         for i in range(2*n):
             bnds = ((None, None),) + bnds
+            
+    
+        print "--------"
+        print c
+        print A_ineq
+        print b_ineq
+        print "--------"
         
         return linprog(c, A_ub = A_ineq, b_ub = b_ineq, bounds = bnds, options={"disp": True, "bland": True, "tol": 1e-8})
     

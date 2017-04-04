@@ -4,9 +4,9 @@ from models.x_linearsgdc import ExplainableSGDClassifier #ExplainableSGDClassifi
 
 
 if __name__ == '__main__':
-    X = [['blue', ]]
+    X = [[1, 10], [2, 20], [3, 30], [4, 40]]
     Y = [-1, -1, 1, 1]
-    obs = [[4, 500]]
+    obs = [[3, 35]]
     model = ExplainableSGDClassifier()
     model.fit(X, Y)     
     print "predicted: ", model.predict(obs)[0]
