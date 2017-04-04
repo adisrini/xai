@@ -2,8 +2,9 @@ import numpy as np
 from scipy.optimize import linprog
 from models.x_linearsgdc import ExplainableSGDClassifier #ExplainableSGDClassifier, ExplainableLinearSVC, ExplainablePerceptron, ExplainableSVC
 
+
 if __name__ == '__main__':
-    X = [[-2, -200], [0, 0], [1, 100], [2, 200]]
+    X = [['blue', ]]
     Y = [-1, -1, 1, 1]
     obs = [[4, 500]]
     model = ExplainableSGDClassifier()

@@ -1,9 +1,9 @@
 import unittest
-from tests import encoding_test
+from tests import binarizer_test
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(encoding_test.suite())
+    suite.addTest(binarizer_test.suite())
     return suite
 
 if __name__ == '__main__':

@@ -5,5 +5,6 @@ Created on 02-Apr-2017
 '''
 
 __all__ = [
-    'DataEncoder',
+    'Preprocesser',
+    'StringBinarizer',
 ]
