@@ -2,6 +2,7 @@ import csv
 
 class Datasets:
     
+    @staticmethod
     def load_credit(self):
         X = []
         y = []
@@ -19,7 +20,8 @@ class Datasets:
                 X.append(features)
         return X, y
     
-    def load_iris(self):
+    @staticmethod
+    def load_iris():
         X = []
         y = []
         with open('../res/datasets/iris.data', 'rt') as f:
@@ -27,10 +29,21 @@ class Datasets:
             for ln in reader:
                 features = []
                 for i in range(len(ln)):
-                    if i in [1, 2, 3, 4]:
+                    if i in [0, 1, 2, 3]:
                         features.append(float(ln[i]))
                     else:
-                        features.append(ln[i])
+                        y.append(ln[i])
                 X.append(features)
         return X, y
+    
+    @staticmethod
+    def binarize(X, y, label1, label2):
+        Xp = []
+        yp = []
+        assert len(X) == len(y)
+        for i in range(len(X)):
+            if(y[i] == label1 or y[i] == label2):
+                Xp.append(X[i])
+                yp.append(y[i])
+        return Xp, yp
         
