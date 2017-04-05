@@ -13,9 +13,16 @@ class Explanation:
         
     def top_k(self, k):
         """
-        Returns the top k features ranked by amount shifted.
+        Returns the top k features ranked by amount shifted in descending order.
         """
         return sorted(self.shifts.items(), key = operator.itemgetter(1), reverse = True)[:k]
+    
+    def features(self):
+        """
+        Returns all features ranked by amount shifted in descending order.
+        Equivalent to calling top_k(n) where n is the number of features
+        """
+        return sorted(self.shifts.items(), key = operator.itemgetter(1), reverse = True)[:]
     
     def confidence(self):
         """

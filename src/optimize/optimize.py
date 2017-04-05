@@ -106,22 +106,13 @@ class LPOptimizer:
         
         A_ineq.append([label*coefs[i] for i in range(n)] + [0 for i in range(n)])
         
-        b_ineq = [f(X[0][i]) for i in range(n) for f in (lambda x: -x, lambda x: x)] + [label * (-intercept) - self.EPSILON]
+        b_ineq = [f(X[0][i]) + self.EPSILON for i in range(n) for f in (lambda x: -x, lambda x: x)] + [label * (-intercept) - self.EPSILON]
         
         bnds = ()
         for i in range(n):
             bnds = bnds + ((None, ranges[i]),)
         for i in range(n):
-            bnds = ((None, None), ) + bnds
-            
-        print bnds
-            
-    
-        print "--------"
-        print c
-        print A_ineq
-        print b_ineq
-        print "--------"
+            bnds = ((None, None), ) + bnds            
         
         return linprog(c, A_ub = A_ineq, b_ub = b_ineq, bounds = bnds, options={"disp": True, "bland": True, "tol": 1e-8})
     
