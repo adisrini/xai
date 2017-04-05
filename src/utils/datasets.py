@@ -44,6 +44,6 @@ class Datasets:
         for i in range(len(X)):
             if(y[i] == label1 or y[i] == label2):
                 Xp.append(X[i])
-                yp.append(y[i])
+                yp.append(1 if y[i] == label1 else -1)
         return Xp, yp
         
