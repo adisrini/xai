@@ -7,7 +7,7 @@ from models.x_perceptron import ExplainablePerceptron
 if __name__ == '__main__':
     X = [[1, 10], [2, 20], [3, 30], [4, 40]]
     Y = [-1, -1, 1, 1]
-    obs = [[1, 15]]
+    obs = [[20, 200]]
     model = ExplainableLinearSVC()
     model.fit(X, Y)     
     print "predicted: ", model.predict(obs)

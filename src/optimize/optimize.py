@@ -109,8 +109,12 @@ class LPOptimizer:
         b_ineq = [f(X[0][i]) for i in range(n) for f in (lambda x: -x, lambda x: x)] + [label * (-intercept) - self.EPSILON]
         
         bnds = ()
-        for i in range(2*n):
-            bnds = ((None, None),) + bnds
+        for i in range(n):
+            bnds = bnds + ((None, ranges[i]),)
+        for i in range(n):
+            bnds = ((None, None), ) + bnds
+            
+        print bnds
             
     
         print "--------"
