@@ -99,14 +99,14 @@ class LPOptimizer:
             
         A_ineq = []
         for i in range(n):
-            row1 = [0 for _ in range(2*n)]; row1[i] = -1/float(ranges[i]); row1[n + i] = -1
-            row2 = [0 for _ in range(2*n)]; row2[i] = 1/float(ranges[i]); row2[n + i] = -1
+            row1 = [0 for _ in range(2*n)]; row1[i] = -1; row1[n + i] = -1
+            row2 = [0 for _ in range(2*n)]; row2[i] = 1; row2[n + i] = -1
             A_ineq.append(row1)
             A_ineq.append(row2)
         
         A_ineq.append([label*coefs[i] for i in range(n)] + [0 for i in range(n)])
         
-        b_ineq = [f(X[0][i]/float(ranges[i])) for i in range(n) for f in (lambda x: -x, lambda x: x)] + [label * -intercept + label * self.EPSILON]
+        b_ineq = [f(X[0][i]) for i in range(n) for f in (lambda x: -x, lambda x: x)] + [label * (-intercept) - self.EPSILON]
         
         bnds = ()
         for i in range(2*n):
@@ -128,6 +128,9 @@ class LPOptimizer:
         featureRanges = util.ranges(data, X)
         result = self.linprog(model, X, featureRanges)
         print result
+        
+        print "original prediction: ", model.predict(X)
+        print "flipped prediction:  ", model.predict([result.x[0:len(X[0])]])
         
         shifts = self.shifts(X, result)
         return (shifts, featureRanges)
