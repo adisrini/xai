@@ -1,7 +1,12 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'explainable/style.css' %}" />
+
+<h1>Explainable AI</h1>
+<h2>Modules</h2>
 {% if modules %}
     <ul>
     {% for module in modules %}
-        <li><a href="/explainable/{{ module.module_route }}/">{{ module.module_title }}</a></li>
+        <li><a href="{% url 'explainable:module' module.module_route %}">{{ module.module_title }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
