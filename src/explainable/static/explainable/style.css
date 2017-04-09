@@ -18,3 +18,23 @@ h2 {
   color: #263238;
   font-weight: 700;
 }
+
+h4 {
+  color: #37474F;
+  font-weight: 400;
+}
+
+.list-horizontal li {
+  padding: 30px 50px;
+  display: inline-block;
+  font-color: white;
+}
+
+li > a {
+  color: white;
+  text-decoration: none;
+}
+
+li > a:visited {
+  color: white;
+}
