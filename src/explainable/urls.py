@@ -6,5 +6,7 @@ urlpatterns = [
     # /explainable/
     url(r'^$', views.index, name='index'),
     # /explainable/flip/
-    url(r'flip/$', views.flip, name='flip'),
+    # ...
+    # /explainable/<other_modules>/
+    url(r'^(?P<route>.*)/$', views.module, name='module'),
 ]

@@ -11,6 +11,6 @@ def index(request):
     }
     return render(request, 'explainable/index.html', context)
 
-def flip(request):
-    module = get_object_or_404(Module, module_route='flip')
-    return render(request, 'explainable/flip.html', {"module" : module})
+def module(request, route):
+    module = get_object_or_404(Module, module_route=route)
+    return render(request, 'explainable/' + route + '.html', {"module" : module})
