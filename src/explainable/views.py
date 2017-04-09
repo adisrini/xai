@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader, RequestContext
 from django.core.files.storage import FileSystemStorage
 
-from .models import Module
+from .models import Module, Dataset
 
 def index(request):
     explainable_modules = Module.objects.all()
@@ -19,6 +19,8 @@ def module(request, route):
         fs = FileSystemStorage()
         filename = fs.save(data.name, data)
         uploaded_file_url = fs.url(filename)
+        dataObject = Dataset(dataset_url = uploaded_file_url)
+        dataObject.save()
         return render(request, 'explainable/' + route + '.html', {"module" : module, "uploaded_file_url": uploaded_file_url})
     else:
         return render(request, 'explainable/' + route + '.html', {"module" : module})

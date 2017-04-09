@@ -3,11 +3,13 @@
 
 <h1 style="text-decoration: underline {{ module.module_color }};">{{ module.module_title }}</h1>
 <h4>{{ module.module_description }}</h4>
+{% if not uploaded_file_url %}
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <input type="file" name="data" />
   <input type="Submit" value="Upload" />
 </form>
+{% endif %}
 {% if uploaded_file_url %}
   <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
 {% endif %}

@@ -9,3 +9,9 @@ class Module(models.Model):
 
     def __str__(self):
         return self.module_title + ": " + self.module_description
+
+class Dataset(models.Model):
+    dataset_url  = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.dataset_url
