@@ -38,3 +38,12 @@ li > a {
 li > a:visited {
   color: white;
 }
+
+a {
+  color: #64B5F6;
+}
+
+.completed-step {
+  font-weight: 700;
+  color: #AAAAAA;
+}

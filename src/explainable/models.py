@@ -14,7 +14,7 @@ class Module(models.Model):
         return self.module_title + ": " + self.module_description
 
 class Dataset(models.Model):
-    dataset_url  = models.CharField(max_length=200)
+    dataset_url = models.CharField(max_length=200)
 
     def __str__(self):
         return self.dataset_url
@@ -24,3 +24,9 @@ class OverwriteStorage(FileSystemStorage):
         if self.exists(name):
             os.remove(os.path.join(settings.MEDIA_ROOT, name))
         return name
+
+class ExplainableModel(models.Model):
+    model_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.model_name
