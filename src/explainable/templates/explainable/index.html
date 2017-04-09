@@ -1,9 +1,9 @@
-{% if options %}
+{% if modules %}
     <ul>
-    {% for option in options %}
-        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% for module in modules %}
+        <li><a href="/explainable/{{ module.module_route }}/">{{ module.module_title }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
-    <p>No polls are available.</p>
+    <p>No modules are currently available.</p>
 {% endif %}

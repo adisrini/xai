@@ -2,13 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 
+from .models import Module
+
 def index(request):
-    explainable_modules = {'flip': 'Quantify the robustness of a model when presented a new observation.'}
-    template = loader.get_template('explainable/index.html')
+    explainable_modules = Module.objects.all()
     context = {
-        'options' : explainable_modules
+        'modules' : explainable_modules
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'explainable/index.html', context)
 
 def flip(request):
     return HttpResponse("You're looking at the flip module.")
