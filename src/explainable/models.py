@@ -27,6 +27,7 @@ class OverwriteStorage(FileSystemStorage):
 
 class ExplainableModel(models.Model):
     model_name = models.CharField(max_length=200)
+    model_color = models.CharField(max_length=200)
 
     def __str__(self):
         return self.model_name
