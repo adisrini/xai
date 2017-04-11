@@ -31,6 +31,9 @@ class ExplainableLinearSVC(ExplainableModel):
         """
         return self.reg.score(self.pp.transform(X), y)
 
+    def coefs(self):
+        return self.reg.coef_
+
     def explain(self, X):
         """
         Returns an explanation given the trained model and an observation.

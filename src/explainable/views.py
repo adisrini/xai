@@ -18,14 +18,18 @@ def index(request):
     return render(request, 'explainable/index.html', context)
 
 def example(request):
-    X, Y, plotData, plotLayout = plotmaker.makeIris()
+    X, Y, plotData, chartLayout = plotmaker.makeIris()
 
     model = ExplainableLinearSVC()
 
     model.fit(X, Y)
 
-    myChart = plotly.offline.plot({"data": plotData,
-                                   "layout": plotLayout},
+    hyperplaneData = plotmaker.hyperplane(model.coefs())
+
+    chartData = plotData + hyperplaneData
+
+    myChart = plotly.offline.plot({"data": chartData,
+                                   "layout": chartLayout},
                                    output_type = "div",
                                    show_link = "False",
                                    include_plotlyjs = "False",
