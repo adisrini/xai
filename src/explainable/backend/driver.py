@@ -1,10 +1,10 @@
 import numpy as np
 import random
 from scipy.optimize import linprog
-from utils.datasets import Datasets
-from models.x_linearsgdc import ExplainableSGDClassifier
-from models.x_linearsvc import ExplainableLinearSVC
-from models.x_perceptron import ExplainablePerceptron
+from .utils.datasets import Datasets
+from .models.x_linearsgdc import ExplainableSGDClassifier
+from .models.x_linearsvc import ExplainableLinearSVC
+from .models.x_perceptron import ExplainablePerceptron
 
 if __name__ == '__main__':
     X, Y = Datasets.load_iris()

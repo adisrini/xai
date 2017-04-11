@@ -1,4 +1,6 @@
 class Functions:
+
+    @staticmethod
     def ranges(data, X):
             featureRanges = []
             for i in range(len(X[0])):
