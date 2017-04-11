@@ -2,3 +2,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'explainable/style.css' %}" />
 
 <h1>Example</h1>
+<p>This is a simple example using the <a href ="https://archive.ics.uci.edu/ml/datasets/Iris">Iris dataset</a> and a Linear Support Vector Classifier model.</p>
+<p>{{ confidence }}</p>
+<div style="width:600;height:500">
+{{ chart|safe }}
+</div>

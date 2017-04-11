@@ -1,6 +1,6 @@
 from scipy.optimize import linprog
 from copy import deepcopy
-from Queue import PriorityQueue
+from queue import PriorityQueue
 import random
 from ..utils.functions import Functions
 import numpy as np
@@ -61,20 +61,20 @@ class PatternSearchOptimizer:
             succs = n.successors([0, 1], deltas)
             for succ in succs:
                 if not((model.predict(succ.state)[0] == label) == should_be_different):
-                    print "Flip"
+                    print("Flip")
                     deltas = [d/float(2) for d in deltas]
                     should_be_different = not should_be_different
                     iter += 1
                     if iter > self.MAX_ITER:
-                        print "Path found!"
-                        print succ.state
-                        print model.predict(succ.state)[0]
-                        print label
+                        print("Path found!")
+                        print(succ.state)
+                        print(model.predict(succ.state)[0])
+                        print(label)
                         return {}, []
                 if succ not in visited:
                     q.append(succ)
                     visited.add(succ)
-        print "No path found!"
+        print("No path found!")
 
         return {}, []
 
@@ -122,10 +122,10 @@ class LPOptimizer:
 
         featureRanges = Functions.ranges(data, X)
         result = self.linprog(model, X, featureRanges)
-        print result
+        print(result)
 
-        print "original prediction: ", model.predict(X)
-        print "flipped prediction:  ", model.predict([result.x[0:len(X[0])]])
+        print("original prediction: ", model.predict(X))
+        print("flipped prediction:  ", model.predict([result.x[0:len(X[0])]]))
 
         shifts = self.shifts(X, result)
         return (shifts, featureRanges)
