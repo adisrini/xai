@@ -2,10 +2,10 @@ import numpy as np
 import plotly.graph_objs as go
 from ..utils.datasets import Datasets
 
-def hyperplane(coefs):
-    x_coef = coefs[0][0]
-    y_coef = coefs[0][1]
-    z_coef = coefs[0][2]
+def hyperplane(coefs, idxs):
+    x_coef = coefs[0][idxs[0]]
+    y_coef = coefs[0][idxs[1]]
+    z_coef = coefs[0][idxs[2]]
     def z(x, y):
         return (-x*x_coef - y*y_coef)/z_coef
 
@@ -18,7 +18,7 @@ def hyperplane(coefs):
 
     return [go.Surface(z = data, type='surface', opacity = 0.7)]
 
-def makeIris():
+def makeIris(obs):
     f, l = Datasets.load_iris()
     features, labels = Datasets.binarize(f, l, 'Iris-setosa', 'Iris-versicolor')
 
@@ -60,6 +60,21 @@ def makeIris():
         )
     )
 
+    trace3 = go.Scatter3d(
+        x=[obs[0][0]],
+        y=[obs[0][1]],
+        z=[obs[0][2]],
+        mode='markers',
+        marker=dict(
+            size=6,
+            line=dict(
+                color='rgba(123, 210, 17, 0.14)',
+                width=0.5
+            ),
+            opacity=0.8
+        )
+    )
+
     layout = go.Layout(title="Explaining the Iris Dataset",
                        xaxis = dict(range=[min(min(x_pos), min(x_neg)), max(max(x_pos), max(x_neg))]),
                        yaxis = dict(range=[min(min(y_pos), min(y_neg)), max(max(y_pos), max(y_neg))]),
@@ -72,4 +87,23 @@ def makeIris():
                                         nticks=4, range = [0,5],),),
                       )
 
-    return features, labels, [trace1, trace2], layout
+    return features, labels, [trace1, trace2, trace3], layout
+
+def flip(explanation, obs):
+    new_obs = []
+    features = explanation.features()
+    for fn, amt in features:
+        idx = fn[8:]
+        new_obs.insert(int(idx), obs[0][int(idx)] + amt)
+    return [go.Scatter3d(x = [new_obs[0]],
+                         y = [new_obs[1]],
+                         z = [new_obs[2]],
+                         mode='markers',
+                         marker=dict(
+                             size=6,
+                             line=dict(
+                                 color='rgba(200, 10, 21, 0.14)',
+                                 width=0.5
+                             ),
+                             opacity=0.8
+                         ))]

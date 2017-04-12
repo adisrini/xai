@@ -86,7 +86,7 @@ class LPOptimizer:
     def shifts(self, X, result):
         shifts = {}
         for i in range(len(X[0])):
-            shifts["feature " + str(i)] = abs(X[0][i] - result.x[i])
+            shifts["feature " + str(i)] = result.x[i] - X[0][i]
         return shifts
 
     def linprog(self, model, X, ranges):
