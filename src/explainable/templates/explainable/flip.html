@@ -4,22 +4,34 @@
 <h1 style="text-decoration: underline {{ module.module_color }};">{{ module.module_title }}</h1>
 <h4>{{ module.module_description }}</h4>
 
-{% if not uploaded_file_url %}
-<p><b>Step 1:</b> Upload a dataset. . .</p>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  <input type="file" name="data" />
-  <input type="Submit" value="Upload" />
-</form>
-<p>. . .or choose from previously uploaded datasets:</p>
-{% endif %}
+{% if stage == 1 %}
+  <p><b>Step 1:</b> Upload a dataset. . .</p>
+  <form action="{% url 'explainable:flip' stage=2 %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="data" />
+    <input type="Submit" value="Upload" />
+  </form>
+  <p>. . .or choose from previously uploaded datasets:</p>
 
-{% if uploaded_file_url %}
+{% elif stage == 2 %}
   <p><span class="completed-step">Step 1:</span> File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
   <p><b>Step 2:</b> Choose a model to train on your data:</p>
   <ul class="list-horizontal">
   {% for model in models %}
-    <li style="background-color: {{ model.model_color }}"><a href="">{{ model.model_name }}</a></li>
+    <form method="post" action="{% url 'explainable:flip' stage=3 %}">
+      {% csrf_token %}
+      <input type="hidden" name="selected_model" value="{{ model.model_name }}" />
+      <li style="background-color: {{ model.model_color }}"><a href="#" onclick="document.forms[0].submit(); return false;">{{ model.model_name }}</a></li>
+    </form>
   {% endfor %}
   </ul>
+
+{% elif stage == 3 %}
+  <p>
+    Stage 3
+  </p>
+
+{% else %}
+  <p>Something went wrong...</p>
+
 {% endif %}

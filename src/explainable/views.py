@@ -39,8 +39,11 @@ def example(request):
     return render(request, 'explainable/example.html', {'features' : explanation.features(), 'confidence' : explanation.confidence(), 'chart' : myChart})
 
 def flip(request, stage=1):
-    module = get_object_or_404(Module, module_route='flip')        
-    if request.method == 'POST' and request.FILES['data']:
+    module = get_object_or_404(Module, module_route='flip')
+    stage = int(stage)
+    if stage == 1:
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 1})
+    elif stage == 2:
         data = request.FILES['data']
         fs = OverwriteStorage()
         filename = fs.save(data.name, data)
@@ -48,6 +51,9 @@ def flip(request, stage=1):
         if len(Dataset.objects.filter(dataset_url = uploaded_file_url)) == 0:    # if non-existent, then save to database
             dataObject = Dataset(dataset_url = uploaded_file_url)
             dataObject.save()
-        return render(request, 'explainable/flip.html', {"module": module, "uploaded_file_url": uploaded_file_url, "models": ExplainableModel.objects.all()})
+        return render(request, 'explainable/flip.html', {"module": module, "stage" : 2, "uploaded_file_url": uploaded_file_url, "models": ExplainableModel.objects.all()})
+    elif stage == 3:
+        print(request.POST.get('selected_model', False))
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 3})
     else:
-        return render(request, 'explainable/flip.html', {"module" : module})
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : -1})
