@@ -68,20 +68,14 @@ def flip(request, stage=1):
             model = ExplainablePerceptron()
         else:
             model = ExplainableLinearSVC() # default case, in case of some error
-        X = []
-        y = []
+        header = []
         with open(settings.BASE_DIR + uploaded_file_url, 'rt') as f:
             reader = csv.reader(f, delimiter = ',', )
-            for ln in reader:
-                features = []
-                for i in range(len(ln)):
-                    if i in [0, 1, 2, 3]:
-                        features.append(float(ln[i]))
-                    else:
-                        y.append(ln[i])
-                X.append(features)
-        print(X)
-        print(y)
-        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 3, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model})
+            header = next(reader)
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 3, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model, "num_features" : range(1, len(header))})
+    elif stage == 4:
+        selected_model = request.POST.get('selected_model', 'Linear Support Vector Classifier')
+        uploaded_file_url = request.POST.get('uploaded_file_url', 'ERROR')
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 4, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model})
     else:
         return render(request, 'explainable/flip.html', {"module" : module, "stage" : -1})
