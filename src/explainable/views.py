@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader, RequestContext
+from django.conf import settings
 import random
 import numpy as np
 import plotly
+import csv
 import plotly.graph_objs as go
 from .models import Module, Dataset, OverwriteStorage, ExplainableModel
 from .backend.models.x_linearsvc import ExplainableLinearSVC
+from .backend.models.x_linearsgdc import ExplainableSGDClassifier
+from .backend.models.x_perceptron import ExplainablePerceptron
 from .backend.utils.datasets import Datasets
 from .backend.view import plotmaker
 
@@ -51,9 +55,33 @@ def flip(request, stage=1):
         if len(Dataset.objects.filter(dataset_url = uploaded_file_url)) == 0:    # if non-existent, then save to database
             dataObject = Dataset(dataset_url = uploaded_file_url)
             dataObject.save()
-        return render(request, 'explainable/flip.html', {"module": module, "stage" : 2, "uploaded_file_url": uploaded_file_url, "models": ExplainableModel.objects.all()})
+        return render(request, 'explainable/flip.html', {"module": module, "stage" : 2, "uploaded_file_url" : uploaded_file_url, "models": ExplainableModel.objects.all()})
     elif stage == 3:
-        print(request.POST.get('selected_model', False))
-        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 3})
+        selected_model = request.POST.get('selected_model', 'Linear Support Vector Classifier')
+        uploaded_file_url = request.POST.get('uploaded_file_url', 'ERROR')
+        model = None
+        if selected_model == 'Linear Support Vector Classifier':
+            model = ExplainableLinearSVC()
+        elif selected_model == 'Linear Stochastic Gradient Descent Classifier':
+            model = ExplainableSGDClassifier()
+        elif selected_model == 'Perceptron':
+            model = ExplainablePerceptron()
+        else:
+            model = ExplainableLinearSVC() # default case, in case of some error
+        X = []
+        y = []
+        with open(settings.BASE_DIR + uploaded_file_url, 'rt') as f:
+            reader = csv.reader(f, delimiter = ',', )
+            for ln in reader:
+                features = []
+                for i in range(len(ln)):
+                    if i in [0, 1, 2, 3]:
+                        features.append(float(ln[i]))
+                    else:
+                        y.append(ln[i])
+                X.append(features)
+        print(X)
+        print(y)
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 3, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model})
     else:
         return render(request, 'explainable/flip.html', {"module" : module, "stage" : -1})

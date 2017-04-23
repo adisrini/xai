@@ -1,8 +1,10 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'explainable/style.css' %}" />
 
+<h5><a href="{% url 'explainable:index' %}">   < back    </a></h5>
 <h1 style="text-decoration: underline {{ module.module_color }};">{{ module.module_title }}</h1>
 <h4>{{ module.module_description }}</h4>
+<h4>{{ MEDIA_ROOT }}</h4>
 
 {% if stage == 1 %}
   <p><b>Step 1:</b> Upload a dataset. . .</p>
@@ -21,15 +23,16 @@
     <form method="post" action="{% url 'explainable:flip' stage=3 %}">
       {% csrf_token %}
       <input type="hidden" name="selected_model" value="{{ model.model_name }}" />
+      <input type="hidden" name="uploaded_file_url" value = "{{ uploaded_file_url }}" />
       <li style="background-color: {{ model.model_color }}"><a href="#" onclick="document.forms[0].submit(); return false;">{{ model.model_name }}</a></li>
     </form>
   {% endfor %}
   </ul>
 
 {% elif stage == 3 %}
-  <p>
-    Stage 3
-  </p>
+  <p><span class="completed-step">Step 1:</span> File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+  <p><span class="completed-step">Step 2:</span> Model chosen: {{ selected_model }}</p>
+
 
 {% else %}
   <p>Something went wrong...</p>
