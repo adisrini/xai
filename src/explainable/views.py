@@ -38,8 +38,8 @@ def example(request):
                                    link_text="")
     return render(request, 'explainable/example.html', {'features' : explanation.features(), 'confidence' : explanation.confidence(), 'chart' : myChart})
 
-def module(request, route):
-    module = get_object_or_404(Module, module_route=route)
+def flip(request, stage=1):
+    module = get_object_or_404(Module, module_route='flip')        
     if request.method == 'POST' and request.FILES['data']:
         data = request.FILES['data']
         fs = OverwriteStorage()
@@ -48,6 +48,6 @@ def module(request, route):
         if len(Dataset.objects.filter(dataset_url = uploaded_file_url)) == 0:    # if non-existent, then save to database
             dataObject = Dataset(dataset_url = uploaded_file_url)
             dataObject.save()
-        return render(request, 'explainable/' + route + '.html', {"module": module, "uploaded_file_url": uploaded_file_url, "models": ExplainableModel.objects.all()})
+        return render(request, 'explainable/flip.html', {"module": module, "uploaded_file_url": uploaded_file_url, "models": ExplainableModel.objects.all()})
     else:
-        return render(request, 'explainable/' + route + '.html', {"module" : module})
+        return render(request, 'explainable/flip.html', {"module" : module})

@@ -6,7 +6,9 @@
 {% if modules %}
     <ul class="list-horizontal">
     {% for module in modules %}
-        <li style="background-color: {{ module.module_color }}"><a href="{% url 'explainable:module' module.module_route %}">{{ module.module_title }}</a></li>
+        {% with "explainable:"|add:module.module_route as route_url %}
+        <li style="background-color: {{ module.module_color }}"><a href="{% url route_url stage=1 %}">{{ module.module_title }}</a></li>
+        {% endwith %}
     {% endfor %}
     </ul>
 {% else %}
