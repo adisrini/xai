@@ -35,11 +35,12 @@
   <form method="post" action = "{% url 'explainable:flip' stage=4 %}">
     {% csrf_token %}
     <ul class="list-horizontal">
-      {% for index in num_features %}
+      {% for index in features %}
         <li><input type="checkbox" name="{{ index }}" value="{{ index }}">{{ index }}</li>
       {% endfor %}
       <input type="hidden" name="selected_model" value="{{ selected_model }}" />
       <input type="hidden" name="uploaded_file_url" value = "{{ uploaded_file_url }}" />
+      <input type="hidden" name="num_features" value = "{{ num_features }}" />
       <li><input type="submit" value="Done"></li>
     </ul>
   </form>

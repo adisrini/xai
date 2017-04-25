@@ -72,10 +72,19 @@ def flip(request, stage=1):
         with open(settings.BASE_DIR + uploaded_file_url, 'rt') as f:
             reader = csv.reader(f, delimiter = ',', )
             header = next(reader)
-        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 3, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model, "num_features" : range(1, len(header))})
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 3, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model, "features" : range(1, len(header)), "num_features" : len(header)})
     elif stage == 4:
         selected_model = request.POST.get('selected_model', 'Linear Support Vector Classifier')
         uploaded_file_url = request.POST.get('uploaded_file_url', 'ERROR')
+        num_features = int(request.POST.get('num_features', []))
+        int_idxs = []
+        str_idxs = []
+        for i in range(1, num_features):
+            res = request.POST.get(str(i), -1)
+            if res == -1:
+                str_idxs.append(i)
+            else:
+                int_idxs.append(i)
         return render(request, 'explainable/flip.html', {"module" : module, "stage" : 4, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model})
     else:
         return render(request, 'explainable/flip.html', {"module" : module, "stage" : -1})
