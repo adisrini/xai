@@ -127,7 +127,7 @@ def flip(request, stage=1):
 
         plotData, chartLayout = plotmaker.make(X, y, obs, idxs)
 
-        hyperplaneData = plotmaker.hyperplane(model.coefs(), idxs)
+        hyperplaneData = plotmaker.hyperplane(model.coefs(), idxs, obs)
         print(hyperplaneData)
         flippedData = plotmaker.flip(explanation, obs)
 

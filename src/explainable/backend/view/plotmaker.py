@@ -2,12 +2,13 @@ import numpy as np
 import plotly.graph_objs as go
 from ..utils.datasets import Datasets
 
-def hyperplane(coefs, idxs):
+def hyperplane(coefs, idxs, obs):
+    unused_obs = [(i, x) for i, x in enumerate(obs) if i not in idxs]
     x_coef = coefs[0][idxs[0]]
     y_coef = coefs[0][idxs[1]]
     z_coef = coefs[0][idxs[2]]
     def z(x, y):
-        return (-x*x_coef - y*y_coef)/z_coef
+        return (-x*x_coef - y*y_coef - sum([coefs[0][i] * x for (i, x) in unused_obs]))/z_coef
 
     data = []
     for y in range(0, 10):
