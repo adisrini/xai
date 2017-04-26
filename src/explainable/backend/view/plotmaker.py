@@ -8,7 +8,7 @@ def hyperplane(coefs, idxs, obs):
     y_coef = coefs[0][idxs[1]]
     z_coef = coefs[0][idxs[2]]
     def z(x, y):
-        return (-x*x_coef - y*y_coef - sum([coefs[0][i] * x for (i, x) in unused_obs]))/z_coef
+        return (-x*x_coef - y*y_coef)/z_coef
 
     data = []
     for y in range(0, 10):
@@ -165,10 +165,10 @@ def makeIris(obs):
 
 def flip(explanation, obs):
     new_obs = []
-    features = explanation.features()
-    for fn, amt in features:
-        idx = fn[8:]
-        new_obs.insert(int(idx), obs[0][int(idx)] + amt)
+    features = dict(explanation.features())
+    for i in range(len(obs[0])):
+        new_obs.append(obs[0][i] + features['feature ' + str(i)])
+    print(new_obs)
     return [go.Scatter3d(x = [new_obs[0]],
                          y = [new_obs[1]],
                          z = [new_obs[2]],
