@@ -49,6 +49,34 @@
   <p><span class="completed-step">Step 1:</span> File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
   <p><span class="completed-step">Step 2:</span> Model chosen: <b>{{ selected_model }}</b></p>
   <p><span class="completed-step">Step 3:</span> Feature types specified.</p>
+  <p><b>All Ready!</b> Enter an observation point to be explained (format as a list without brackets):</p>
+  <form method="post" action = "{% url 'explainable:flip' stage=5 %}">
+    {% csrf_token %}
+    <input type="text" placeholder="100, 35.5, 'John'" name="observation">
+    <input type="hidden" name="selected_model" value="{{ selected_model }}" />
+    <input type="hidden" name="uploaded_file_url" value = "{{ uploaded_file_url }}" />
+    <input type="hidden" name="int_idxs" value = "{{ int_idxs }}" />
+    <input type="hidden" name="str_idxs" value = "{{ str_idxs }}" />
+    <input type="submit" value="Submit">
+  </form>
+
+{% elif stage == 5 %}
+  <p><span class="completed-step">Step 1:</span> File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+  <p><span class="completed-step">Step 2:</span> Model chosen: <b>{{ selected_model }}</b></p>
+  <p><span class="completed-step">Step 3:</span> Feature types specified.</p>
+  <p><b>All Ready!</b> Enter an observation point to be explained (format as a list without brackets):</p>
+  <form method="post" action = "{% url 'explainable:flip' stage=5 %}">
+    {% csrf_token %}
+    <input type="text" placeholder="100, 35.5, 'John'" name="observation">
+    <input type="hidden" name="selected_model" value="{{ selected_model }}" />
+    <input type="hidden" name="uploaded_file_url" value = "{{ uploaded_file_url }}" />
+    <input type="hidden" name="int_idxs" value = "{{ int_idxs }}" />
+    <input type="hidden" name="str_idxs" value = "{{ str_idxs }}" />
+    <input type="submit" value="Submit">
+  </form>
+  <div style="width:1200;height:800">
+  {{ chart|safe }}
+  </div>
 
 {% else %}
   <p>Something went wrong...</p>

@@ -13,6 +13,7 @@ from .backend.models.x_linearsgdc import ExplainableSGDClassifier
 from .backend.models.x_perceptron import ExplainablePerceptron
 from .backend.utils.datasets import Datasets
 from .backend.view import plotmaker
+import ast
 
 def index(request):
     explainable_modules = Module.objects.all()
@@ -59,15 +60,6 @@ def flip(request, stage=1):
     elif stage == 3:
         selected_model = request.POST.get('selected_model', 'Linear Support Vector Classifier')
         uploaded_file_url = request.POST.get('uploaded_file_url', 'ERROR')
-        model = None
-        if selected_model == 'Linear Support Vector Classifier':
-            model = ExplainableLinearSVC()
-        elif selected_model == 'Linear Stochastic Gradient Descent Classifier':
-            model = ExplainableSGDClassifier()
-        elif selected_model == 'Perceptron':
-            model = ExplainablePerceptron()
-        else:
-            model = ExplainableLinearSVC() # default case, in case of some error
         header = []
         with open(settings.BASE_DIR + uploaded_file_url, 'rt') as f:
             reader = csv.reader(f, delimiter = ',', )
@@ -85,6 +77,41 @@ def flip(request, stage=1):
                 str_idxs.append(i)
             else:
                 int_idxs.append(i)
-        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 4, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model})
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 4, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model, "int_idxs" : int_idxs, "str_idxs" : str_idxs})
+    elif stage == 5:
+        selected_model = request.POST.get('selected_model', 'Linear Support Vector Classifier')
+        uploaded_file_url = request.POST.get('uploaded_file_url', 'ERROR')
+        int_idxs = request.POST.get('int_idxs', [])
+        str_idxs = request.POST.get('str_idxs', [])
+        observation = request.POST.get('observation', "")
+        obs = [ast.literal_eval('[' + observation + ']')]
+        model = None
+        if selected_model == 'Linear Support Vector Classifier':
+            model = ExplainableLinearSVC()
+        elif selected_model == 'Linear Stochastic Gradient Descent Classifier':
+            model = ExplainableSGDClassifier()
+        elif selected_model == 'Perceptron':
+            model = ExplainablePerceptron()
+        else:
+            model = ExplainableLinearSVC() # default case, in case of some error
+
+        X, Y, plotData, chartLayout = plotmaker.makeIris(obs) #plotmaker.make(uploaded_file_url, obs, int_idxs, str_idxs)
+
+        model.fit(X, Y)
+        explanation = model.explain(obs)
+
+        hyperplaneData = plotmaker.hyperplane(model.coefs(), [0, 1, 2])
+        flippedData = plotmaker.flip(explanation, obs)
+
+        chartData = plotData + hyperplaneData + flippedData
+
+        myChart = plotly.offline.plot({"data": chartData,
+                                       "layout": chartLayout},
+                                       output_type = "div",
+                                       show_link = "False",
+                                       include_plotlyjs = "False",
+                                       link_text="")
+
+        return render(request, 'explainable/flip.html', {"module" : module, "stage" : 5, "uploaded_file_url" : uploaded_file_url, "selected_model" : selected_model, "int_idxs" : int_idxs, "str_idxs" : str_idxs, "chart" : myChart})
     else:
         return render(request, 'explainable/flip.html', {"module" : module, "stage" : -1})
