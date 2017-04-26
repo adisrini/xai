@@ -16,7 +16,7 @@ class Explanation:
         """
         Returns the top k features ranked by amount shifted in descending order.
         """
-        return sorted(self.shifts.items(), key = operator.itemgetter(1), reverse = True)[:k]
+        return sorted(self.shifts.items(), key = lambda v: abs(v[1]), reverse = True)[:k]
 
     def features(self):
         """
