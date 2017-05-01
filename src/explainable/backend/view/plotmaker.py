@@ -2,18 +2,23 @@ import numpy as np
 import plotly.graph_objs as go
 from ..utils.datasets import Datasets
 
-def hyperplane(coefs, idxs, obs):
-    unused_obs = [(i, x) for i, x in enumerate(obs) if i not in idxs]
-    x_coef = coefs[0][idxs[0]]
-    y_coef = coefs[0][idxs[1]]
-    z_coef = coefs[0][idxs[2]]
+def hyperplane(coefs, obs, idxs):
+    unused_obs = [(i, x) for i, x in enumerate(obs[0]) if i not in idxs]
+    offset = coefs[0]
+    x_coef = coefs[idxs[0] + 1]
+    y_coef = coefs[idxs[1] + 1]
+    z_coef = coefs[idxs[2] + 1]
+    print(obs)
+    print(unused_obs)
+    print(sum([coefs[i + 1] * x for (i, x) in unused_obs]))
     def z(x, y):
-        return (-x*x_coef - y*y_coef)/z_coef
+        return (-offset -x*x_coef - y*y_coef - sum([coefs[i + 1] * x for (i, x) in unused_obs]))/z_coef
+    # b0 + b1x1 + b2x2 + ... + bnxn = 0
 
     data = []
-    for y in range(0, 10):
+    for y in range(0, 100):
         row = []
-        for x in range(0, 10):
+        for x in range(0, 100):
             row.append(z(x, y))
         data.append(row)
 
@@ -163,15 +168,16 @@ def makeIris(obs):
 
     return features, labels, [trace1, trace2, trace3], layout
 
-def flip(explanation, obs):
+def flip(explanation, obs, idxs):
     new_obs = []
     features = dict(explanation.features())
     for i in range(len(obs[0])):
         new_obs.append(obs[0][i] + features['feature ' + str(i)])
-    print(new_obs)
-    return [go.Scatter3d(x = [new_obs[0]],
-                         y = [new_obs[1]],
-                         z = [new_obs[2]],
+    print("IDXS ", idxs)
+    print("NEW OBS ", new_obs)
+    return [go.Scatter3d(x = [new_obs[idxs[0]]],
+                         y = [new_obs[idxs[1]]],
+                         z = [new_obs[idxs[2]]],
                          mode='markers',
                          marker=dict(
                              size=6,

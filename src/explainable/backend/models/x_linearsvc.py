@@ -1,4 +1,5 @@
 from sklearn.svm import LinearSVC
+import numpy as np
 from ..explain.explain import Explainer, ExplainableModel
 from ..optimize.optimize import LPOptimizer
 from ..preprocess.process import Preprocesser
@@ -32,7 +33,7 @@ class ExplainableLinearSVC(ExplainableModel):
         return self.reg.score(self.pp.transform(X), y)
 
     def coefs(self):
-        return self.reg.coef_
+        return np.concatenate((self.reg.intercept_, self.reg.coef_[0]), axis = 0)
 
     def explain(self, X):
         """

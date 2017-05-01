@@ -123,16 +123,12 @@ def flip(request, stage=1):
         for k, v in top_3_features:
             idxs.append(int(k[8:]))
 
-        print(top_3_features)
-
         idxs = sorted(idxs, key=int)
-
-        print(idxs)
 
         plotData, chartLayout = plotmaker.make(X, y, obs, idxs)
 
-        hyperplaneData = plotmaker.hyperplane(model.coefs(), idxs, obs)
-        flippedData = plotmaker.flip(explanation, obs)
+        hyperplaneData = plotmaker.hyperplane(model.coefs(), obs, idxs)
+        flippedData = plotmaker.flip(explanation, obs, idxs)
 
         chartData = plotData + hyperplaneData + flippedData
 
